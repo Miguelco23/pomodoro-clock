@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/pomodoro-clock/static/css/main.2691bd97.css",
+    "main.js": "/pomodoro-clock/static/js/main.e836c6ba.js",
+    "static/media/beep.mp3": "/pomodoro-clock/static/media/beep.ad74e9f66f1f4d34401e.mp3",
+    "index.html": "/pomodoro-clock/index.html",
+    "main.2691bd97.css.map": "/pomodoro-clock/static/css/main.2691bd97.css.map",
+    "main.e836c6ba.js.map": "/pomodoro-clock/static/js/main.e836c6ba.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.2691bd97.css",
+    "static/js/main.e836c6ba.js"
+  ]
+}
