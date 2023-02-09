@@ -1,13 +1,14 @@
 import './App.css';
 import { useState } from 'react';
+import BeepSound from './assets/audios/beep.mp3';
 
 function App() {
   const [breakTime, setBreakTime] = useState(5);
   const [workTime, setWorkTime] = useState(25);
   const [timerState, setTimerState] = useState("Work");
-  const [minutesLeft, setMinutesLeft] = useState(workTime);
-  const [secondsLeft, setSecondsLeft] = useState(0);
+  const [displayTime, setDisplayTime] = useState(25 * 60);
   const [isRunning, setIsRunning] = useState(false);
+  const [onBrake, setOnBrake] = useState(false);
 
   const addBreakTime = () => {
     if (breakTime < 60) {
@@ -21,37 +22,76 @@ function App() {
 
   };
 
-  const addWorkTime = () => {
+  const addWorkTime = (amount) => {
     if (workTime < 60) {
       setWorkTime(workTime + 1);
+      if (!isRunning) {
+        setDisplayTime(((workTime + 1) * 60));
+      }
     }
   };
-  const subtractWorkTime = () => {
+  const subtractWorkTime = (amount) => {
     if (workTime > 1) {
       setWorkTime(workTime - 1);
+      if (!isRunning) {
+        setDisplayTime(((workTime - 1) * 60));
+      }
     }
+  };
+
+  const formatTime = (time) => {
+    let minutes = Math.floor(time / 60);
+    let seconds = time % 60;
+    return (minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
   };
 
   const playPause = () => {
-    let miutes = 0;
-    let seconds = 0;
-    if (isRunning) {
+    let seconds = 1000;
+    let date = new Date().getTime();
+    let nextDate = new Date().getTime() + seconds;
+    let onBrakeVariable = onBrake;
 
-    } else {
-      playMinutes();
+    if (!isRunning) {
+      let interval = setInterval(() => {
+        if (displayTime <= 0) {
+          playBeep();
+        }
+        date = new Date().getTime();
+
+        if (date > nextDate) {
+
+          setDisplayTime(prev => {
+            if(prev === 1){
+              playBeep();
+            }
+            if (prev <= 0 && !onBrakeVariable) {
+              onBrakeVariable = true;
+              setOnBrake(true);
+              setTimerState("Break");
+              return breakTime * 60;
+            } else if (prev <= 0 && onBrakeVariable) {
+              onBrakeVariable = false;
+              setOnBrake(false);
+              setTimerState("Work");
+              return workTime * 60;
+            }
+
+            return prev - 1;
+          })
+
+          nextDate += seconds;
+        }
+
+      }, 30);
+      localStorage.clear();
+      localStorage.setItem('interval-id', interval);
     }
-    function playMinutes() {
-      for (let i = 0; i < workTime; i++) {
-        playSeconds();
-        setTimeout(setMinutesLeft(minutesLeft - 1), 60000);
-      }
+
+    if (isRunning) {
+      clearInterval(localStorage.getItem('interval-id'));
     }
-    function playSeconds() {
-      setSecondsLeft(60)
-      for (let i = 0; i < 60; i++) {
-        setTimeout(setSecondsLeft(secondsLeft - 1), 1000);
-      }
-    }
+
+    setIsRunning(!isRunning);
   };
 
   const reset = () => {
@@ -60,8 +100,16 @@ function App() {
     }
     setBreakTime(5);
     setWorkTime(25);
-    setMinutesLeft(`${workTime}`);
-    setSecondsLeft(0);
+    setTimerState("Work");
+    setDisplayTime(25 * 60);
+    setIsRunning(false);
+    setOnBrake(false);
+    document.getElementById("beep").currentTime = 0;
+    document.getElementById("beep").pause();
+  };
+
+  const playBeep = () => {
+    document.getElementById('beep').play();
   };
 
   return (
@@ -87,7 +135,8 @@ function App() {
       {/* Timer box */}
       <div className="timer-box">
         <span id="timer-label"><b>{timerState}</b></span>
-        <span id="time-left"><h1>{`${minutesLeft}:${secondsLeft}`}</h1></span>
+        <span id="time-left"><h1>{formatTime(displayTime)}</h1></span>
+        <audio src={BeepSound} id="beep" type="audio/mp3"></audio>
 
         <i id='start_stop' class="fa-solid fa-backward-step" onClick={playPause}></i>
         <i id='reset' className="fa-solid fa-repeat" onClick={reset}></i>

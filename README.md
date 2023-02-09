@@ -13,8 +13,8 @@ Also some [Font Awesome](https://fontawesome.com) icons
 
 ## Preview 👀
 
-In [This link]() Is deployed my application
+In [This link](https://miguelco23.github.io/pomodoro-clock/) Is deployed my application
 
 Also here you can see some preview
 
-![Preview]()
+![Preview](https://i.imgur.com/R6Eu6EI.png)
