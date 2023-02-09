@@ -1,1 +1,33 @@
+.App {
+    width: 50%;
+    border: solid 1px black;
+    margin: 5rem auto;
+}
 
+.times{
+    margin: 1rem 1rem;
+}
+
+.break-box,
+.work-box {
+    display: inline-block;
+    border: solid 1px black;
+    margin: 0 2%;
+    width: 40%;
+    text-align: center;
+}
+
+i {
+    margin: 10px;
+}
+
+i:hover {
+    cursor: pointer;
+}
+
+.timer-box {
+    border: solid 1px black;
+    margin: 0 auto;
+    width: 50%;
+    text-align: center;
+}
